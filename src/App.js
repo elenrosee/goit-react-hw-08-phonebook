@@ -1,33 +1,27 @@
-import React, { Component } from "react";
+import { useState, useEffect, Fragment } from "react";
 
 import ContactForm from "./components/ContactForm";
 import Filter from "./components/Filter";
 import ContactsList from "./components/ContactsList";
 import Notification from "./components/Notification";
 
-class App extends Component {
-  state = {
-    contacts: [],
-    filter: "",
-  };
+export default function App() {
+  const [contacts, setContacts] = useState([]);
+  const [filter, setFilter] = useState("");
 
-  componentDidMount() {
+  useEffect(() => {
     const contacts = localStorage.getItem("contacts");
     const parsedContacts = JSON.parse(contacts);
     if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
+      setContacts(parsedContacts);
     }
-  }
+  }, []);
 
-  componentDidUpdate(prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
-    }
-  }
+  useEffect(() => {
+    localStorage.setItem("contacts", JSON.stringify(contacts));
+  }, [contacts]);
 
-  formSubmitHandler = (data) => {
-    const { contacts } = this.state;
-
+  const formSubmitHandler = (data) => {
     if (
       contacts.find(
         ({ name }) => name.toLowerCase() === data.name.toLowerCase()
@@ -35,16 +29,11 @@ class App extends Component {
     ) {
       alert(`${data.name} is already in contacts`);
     } else {
-      this.setState((prevState) => {
-        return {
-          contacts: [...[data], ...prevState.contacts],
-        };
-      });
+      setContacts((prevState) => [...[data], ...prevState]);
     }
   };
 
-  getVisibleContacts = () => {
-    const { filter, contacts } = this.state;
+  const getVisibleContacts = () => {
     const normalizedFilter = filter.toLowerCase();
 
     return contacts.filter((contact) =>
@@ -52,40 +41,31 @@ class App extends Component {
     );
   };
 
-  changeFilter = (e) => {
-    this.setState({ filter: e.currentTarget.value });
-  };
-
-  deleteContact = (contactId) => {
-    this.setState((prevState) => ({
-      contacts: prevState.contacts.filter(
-        (contact) => contact.id !== contactId
-      ),
-    }));
-  };
-
-  render() {
-    const { contacts, filter } = this.state;
-
-    return (
-      <React.Fragment>
-        <h1>Phonebook</h1>
-        <ContactForm onSubmit={this.formSubmitHandler} />
-        <h2>Contacts</h2>
-        {contacts.length > 0 ? (
-          <React.Fragment>
-            <Filter value={filter} onChange={this.changeFilter} />
-            <ContactsList
-              contacts={this.getVisibleContacts()}
-              onDeleteContact={this.deleteContact}
-            />
-          </React.Fragment>
-        ) : (
-          <Notification message="Empty contacts list" />
-        )}
-      </React.Fragment>
+  const deleteContact = (contactId) => {
+    setContacts((prevState) =>
+      prevState.filter((contact) => contact.id !== contactId)
     );
-  }
-}
+  };
 
-export default App;
+  return (
+    <Fragment>
+      <h1>Phonebook</h1>
+      <ContactForm onSubmit={formSubmitHandler} />
+      <h2>Contacts</h2>
+      {contacts.length > 0 ? (
+        <Fragment>
+          <Filter
+            value={filter}
+            onChange={(e) => setFilter(e.currentTarget.value)}
+          />
+          <ContactsList
+            contacts={getVisibleContacts()}
+            onDeleteContact={deleteContact}
+          />
+        </Fragment>
+      ) : (
+        <Notification message="Empty contacts list" />
+      )}
+    </Fragment>
+  );
+}
