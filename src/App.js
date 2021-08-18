@@ -6,31 +6,19 @@ import ContactsList from "./components/ContactsList";
 import Notification from "./components/Notification";
 
 export default function App() {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(
+    () => JSON.parse(window.localStorage.getItem("contacts")) ?? []
+  );
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    const contacts = localStorage.getItem("contacts");
-    const parsedContacts = JSON.parse(contacts);
-    if (parsedContacts) {
-      setContacts(parsedContacts);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("contacts", JSON.stringify(contacts));
+    window.localStorage.setItem("contacts", JSON.stringify(contacts));
   }, [contacts]);
 
   const formSubmitHandler = (data) => {
-    if (
-      contacts.find(
-        ({ name }) => name.toLowerCase() === data.name.toLowerCase()
-      )
-    ) {
-      alert(`${data.name} is already in contacts`);
-    } else {
-      setContacts((prevState) => [...[data], ...prevState]);
-    }
+    contacts.find(({ name }) => name.toLowerCase() === data.name.toLowerCase())
+      ? alert(`${data.name} is already in contacts`)
+      : setContacts((prevState) => [...[data], ...prevState]);
   };
 
   const getVisibleContacts = () => {
