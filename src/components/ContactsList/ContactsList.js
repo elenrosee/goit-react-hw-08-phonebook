@@ -1,26 +1,39 @@
+import Filter from '../Filter';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styles from './ContactsList.module.scss';
 import contactsActions from '../redux/FormInput/contacts-actions';
 
+import Notification from '../Notification';
+import { Fragment } from 'react';
+
 function ContactsList({ contacts, onDeleteContact }) {
   return (
-    <ul className={styles.contact_list}>
-      {contacts.map(({ name, number, id }) => (
-        <li key={id} className={styles.contact_item}>
-          <span>
-            {name}: {number}
-          </span>
-          <button
-            type="button"
-            onClick={() => onDeleteContact(id)}
-            className={styles.button}
-          >
-            Delete
-          </button>
-        </li>
-      ))}
-    </ul>
+    <Fragment>
+      {contacts.length > 0 ? (
+        <Fragment>
+          <Filter />
+          <ul className={styles.contact_list}>
+            {contacts.map(({ name, number, id }) => (
+              <li key={id} className={styles.contact_item}>
+                <span>
+                  {name}: {number}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onDeleteContact(id)}
+                  className={styles.button}
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        </Fragment>
+      ) : (
+        <Notification message="Empty contacts list" />
+      )}
+    </Fragment>
   );
 }
 
