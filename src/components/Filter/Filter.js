@@ -1,7 +1,9 @@
-import PropTypes from "prop-types";
-import styles from "./Filter.module.scss";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import contactsActions from '../redux/FormInput/contacts-actions';
+import styles from './Filter.module.scss';
 
-export default function Filter({ value, onChange }) {
+function Filter({ value, onChange }) {
   return (
     <form className={styles.form}>
       <label>
@@ -11,6 +13,16 @@ export default function Filter({ value, onChange }) {
     </form>
   );
 }
+
+const mapStateToProps = state => ({
+  value: state.contacts.filter,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onChange: e => dispatch(contactsActions.changeFilter(e.target.value)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);
 
 Filter.propTypes = {
   value: PropTypes.string.isRequired,
