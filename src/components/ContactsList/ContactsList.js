@@ -2,12 +2,17 @@ import Filter from '../Filter';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styles from './ContactsList.module.scss';
-import contactsActions from '../redux/FormInput/contacts-actions';
+import ContactsOperations from '../redux/Contacts/contacts-operations';
 
 import Notification from '../Notification';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 
-function ContactsList({ contacts, onDeleteContact }) {
+function ContactsList({ contacts, fetchContacts, onDeleteContact }) {
+  useEffect(() => {
+    fetchContacts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Fragment>
       {contacts.length > 0 ? (
@@ -46,8 +51,8 @@ const getVisibleContacts = (contacts, filter) => {
 };
 
 const mapStateToProps = state => {
-  const { items, filter } = state.contacts;
-  const visibleContacts = getVisibleContacts(items, filter);
+  const { contacts, filter } = state.contacts;
+  const visibleContacts = getVisibleContacts(contacts, filter);
 
   return {
     contacts: visibleContacts,
@@ -55,7 +60,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onDeleteContact: id => dispatch(contactsActions.deleteItem(id)),
+  onDeleteContact: id => dispatch(ContactsOperations.deleteContact(id)),
+  fetchContacts: () => dispatch(ContactsOperations.fetchContacts()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactsList);
