@@ -1,11 +1,6 @@
 {
   "contacts": [
     {
-      "name": "dima",
-      "number": "12345",
-      "id": "77fdd270-4f3b-4649-b2cb-14fd23629339"
-    },
-    {
       "name": "Tatiana",
       "number": "12345",
       "id": "fc7f329b-b34c-46f3-aeb2-381e4472307d"
@@ -14,6 +9,11 @@
       "name": "Оля",
       "number": "12345",
       "id": "9c5add32-1fb5-480d-95bc-3972a833e89d"
+    },
+    {
+      "name": "elen",
+      "number": "12345",
+      "id": "4c5f9b4f-0aaa-4de5-a296-fd00e6d7e7ad"
     }
   ]
 }
