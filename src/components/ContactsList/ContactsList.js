@@ -2,8 +2,8 @@ import Filter from '../Filter';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styles from './ContactsList.module.scss';
-import ContactsOperations from '../redux/Contacts/contacts-operations';
-import ContactsSelectors from '../redux/Contacts/contacts-selectors';
+import ContactsOperations from '../../redux/Contacts/contacts-operations';
+import ContactsSelectors from '../../redux/Contacts/contacts-selectors';
 import Notification from '../Notification';
 import { Fragment, useEffect } from 'react';
 
@@ -15,6 +15,7 @@ function ContactsList({ contacts, fetchContacts, onDeleteContact }) {
 
   return (
     <Fragment>
+      <h2>Contacts</h2>
       {contacts.length > 0 ? (
         <Fragment>
           <Filter />

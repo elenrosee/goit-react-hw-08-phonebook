@@ -1,15 +1,18 @@
 import { Fragment } from 'react';
-
-import ContactForm from './components/ContactForm';
-import ContactsList from './components/ContactsList';
+import { Route, Switch } from 'react-router';
+import AppBar from './components/AppBar';
+import ContactsView from './views/ContactsView';
+import HomeView from './views/HomeView';
 
 export default function App() {
   return (
     <Fragment>
-      <h1>Phonebook</h1>
-      <ContactForm />
-      <h2>Contacts</h2>
-      <ContactsList />
+      <AppBar />
+
+      <Switch>
+        <Route exact path="/" component={HomeView}></Route>
+        <Route exact path="/contacts" component={ContactsView}></Route>
+      </Switch>
     </Fragment>
   );
 }
