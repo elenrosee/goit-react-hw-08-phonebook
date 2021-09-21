@@ -1,9 +1,14 @@
 import { memo } from 'react';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import UserMenu from '../UserMenu/UserMenu';
+import AuthNav from './AuthNav';
 import styles from './AppBar.module.scss';
+import authSelectors from '../../redux/Auth/auth-selectors';
 
 function AppBar() {
+  const isLoggedIn = useSelector(authSelectors.getIsLoggedIn);
+
   return (
     <div className={styles.AppBar}>
       <nav>
@@ -16,20 +21,6 @@ function AppBar() {
           HomePage
         </NavLink>
         <NavLink
-          to="/register"
-          className={styles.link}
-          activeClassName={styles.activeLink}
-        >
-          Register
-        </NavLink>
-        <NavLink
-          to="/login"
-          className={styles.link}
-          activeClassName={styles.activeLink}
-        >
-          Login
-        </NavLink>
-        <NavLink
           to="/contacts"
           className={styles.link}
           activeClassName={styles.activeLink}
@@ -37,7 +28,7 @@ function AppBar() {
           Contacts
         </NavLink>
       </nav>
-      <UserMenu />
+      {isLoggedIn ? <UserMenu /> : <AuthNav />}
     </div>
   );
 }
