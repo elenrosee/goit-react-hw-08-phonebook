@@ -1,39 +1,56 @@
-import Filter from '../Filter';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { Fragment, useEffect } from 'react';
 import styles from './ContactsList.module.scss';
+
 import ContactsOperations from '../../redux/Contacts/contacts-operations';
 import ContactsSelectors from '../../redux/Contacts/contacts-selectors';
+import Filter from '../Filter';
 import Notification from '../Notification';
-import { Fragment, useEffect } from 'react';
 
-function ContactsList({ contacts, fetchContacts, onDeleteContact }) {
+function ContactsList() {
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    fetchContacts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    dispatch(ContactsOperations.fetchContacts());
+  }, [dispatch]);
+
+  const allContacts = useSelector(state =>
+    ContactsSelectors.getAllContacts(state),
+  );
+
+  const visibleContacts = useSelector(state =>
+    ContactsSelectors.getVisibleContacts(state),
+  );
 
   return (
     <Fragment>
       <h2>Contacts</h2>
-      {contacts.length > 0 ? (
+      {allContacts.length > 0 ? (
         <Fragment>
           <Filter />
           <ul className={styles.contact_list}>
-            {contacts.map(({ name, number, id }) => (
-              <li key={id} className={styles.contact_item}>
-                <span>
-                  {name}: {number}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => onDeleteContact(id)}
-                  className={styles.button}
-                >
-                  Delete
-                </button>
+            {visibleContacts.length === 0 ? (
+              <li>
+                <h4>Contact whith this name was not found.</h4>
               </li>
-            ))}
+            ) : (
+              visibleContacts.map(({ name, number, id }) => (
+                <li key={id} className={styles.contact_item}>
+                  <span>
+                    {name}: {number}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      dispatch(ContactsOperations.deleteContact(id))
+                    }
+                    className={styles.button}
+                  >
+                    Delete
+                  </button>
+                </li>
+              ))
+            )}
           </ul>
         </Fragment>
       ) : (
@@ -43,24 +60,4 @@ function ContactsList({ contacts, fetchContacts, onDeleteContact }) {
   );
 }
 
-const mapStateToProps = state => ({
-  contacts: ContactsSelectors.getVisibleContacts(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  onDeleteContact: id => dispatch(ContactsOperations.deleteContact(id)),
-  fetchContacts: () => dispatch(ContactsOperations.fetchContacts()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsList);
-
-ContactsList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
-};
+export default ContactsList;

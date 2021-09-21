@@ -8,11 +8,22 @@ import {
   REGISTER,
 } from 'redux-persist';
 import logger from 'redux-logger';
-import contactsReducer from './Contacts/contacts-reducer';
+import contactsReducer from './Contacts/contacts-slices';
+import userReducer from './Auth/auth-slices';
+import persistReducer from 'redux-persist/lib/persistReducer';
+import storage from 'redux-persist/lib/storage';
+import persistStore from 'redux-persist/lib/persistStore';
 
-const store = configureStore({
+const authPersistConfig = {
+  key: 'auth',
+  storage,
+  whitelist: ['token'],
+};
+
+export const store = configureStore({
   reducer: {
-    contacts: contactsReducer,
+    auth: persistReducer(authPersistConfig, userReducer),
+    phonebook: contactsReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
@@ -24,4 +35,4 @@ const store = configureStore({
 });
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { store };
+export const persistor = persistStore(store);
