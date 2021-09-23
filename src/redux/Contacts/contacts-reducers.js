@@ -1,4 +1,4 @@
-import { createReducer, createSlice } from '@reduxjs/toolkit';
+import { createReducer } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 import {
   changeFilter,

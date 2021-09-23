@@ -32,23 +32,26 @@ const logOut = createAsyncThunk('auth/logout', async () => {
   try {
     await axios.post('/users/logout');
     token.unset();
-  } catch (error) {
-    // TODO: Добавить обработку ошибки error.message
-  }
+  } catch (error) {}
 });
 
-// const userSignup = () => dispatch => {
-//   dispatch(userSignupRequest());
+const fetchCurrentUser = createAsyncThunk(
+  'auth/refresh',
+  async (_, thunkAPI) => {
+    const state = thunkAPI.getState();
+    const persistedToken = state.auth.token;
 
-//   axios()
-//     .then(response => {
-//       console.log(response);
-//       dispatch(userSignupSuccess(response));
-//     })
-//     .catch(error => {
-//       dispatch(userSignupError(error));
-//     });
-// };
+    if (persistedToken === null) {
+      return thunkAPI.rejectWithValue();
+    }
+
+    token.set(persistedToken);
+    try {
+      const { data } = await axios.get('/users/current');
+      return data;
+    } catch (error) {}
+  },
+);
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { register, logIn, logOut };
+export default { register, logIn, logOut, fetchCurrentUser };
