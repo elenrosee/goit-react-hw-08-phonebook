@@ -23,7 +23,7 @@ function ContactsList() {
   );
 
   return (
-    <Fragment>
+    <div>
       <h2>Contacts</h2>
       {allContacts.length > 0 ? (
         <Fragment>
@@ -56,7 +56,7 @@ function ContactsList() {
       ) : (
         <Notification message="Empty contacts list" />
       )}
-    </Fragment>
+    </div>
   );
 }
 

@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import ContactsOperations from '../../redux/Contacts/contacts-operations';
@@ -48,7 +48,7 @@ function ContactForm() {
   };
 
   return (
-    <Fragment>
+    <div>
       <h1>Phonebook</h1>
       <form onSubmit={handleSubmit} className={styles.contact_form}>
         <label>
@@ -79,7 +79,7 @@ function ContactForm() {
           Add contact
         </button>
       </form>
-    </Fragment>
+    </div>
   );
 }
 

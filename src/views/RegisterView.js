@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import authOperations from '../redux/Auth/auth-operations';
 
 const styles = {
@@ -42,7 +43,12 @@ export default function RegisterView() {
 
   return (
     <div>
-      <h1>Страница регистрации</h1>
+      <h1>Register page</h1>
+
+      <h3>
+        To use our service, please register or{' '}
+        <NavLink to="/login">Login</NavLink> to your account.
+      </h3>
 
       <form onSubmit={handleSubmit} style={styles.form} autoComplete="off">
         <label style={styles.label}>
