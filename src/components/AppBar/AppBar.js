@@ -20,13 +20,15 @@ function AppBar() {
         >
           HomePage
         </NavLink>
-        <NavLink
-          to="/contacts"
-          className={styles.link}
-          activeClassName={styles.activeLink}
-        >
-          Contacts
-        </NavLink>
+        {isLoggedIn && (
+          <NavLink
+            to="/contacts"
+            className={styles.link}
+            activeClassName={styles.activeLink}
+          >
+            Contacts
+          </NavLink>
+        )}
       </nav>
       {isLoggedIn ? <UserMenu /> : <AuthNav />}
     </div>

@@ -7,12 +7,13 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import logger from 'redux-logger';
+import storage from 'redux-persist/lib/storage';
+import persistReducer from 'redux-persist/lib/persistReducer';
+import persistStore from 'redux-persist/lib/persistStore';
 import contactsReducer from './Contacts/contacts-reducers';
 import authReducer from './Auth/auth-slices';
-import persistReducer from 'redux-persist/lib/persistReducer';
-import storage from 'redux-persist/lib/storage';
-import persistStore from 'redux-persist/lib/persistStore';
+
+// import logger from 'redux-logger';
 
 const authPersistConfig = {
   key: 'auth',
@@ -30,7 +31,8 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(logger),
+    }),
+  //.concat(logger),
   devTools: process.env.NODE_ENV === 'development',
 });
 
